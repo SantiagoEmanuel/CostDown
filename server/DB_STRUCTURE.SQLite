@@ -1,0 +1,54 @@
+CREATE TABLE
+  Users (
+    id TEXT PRIMARY KEY,
+    full_name TEXT NOT NULL,
+    email TEXT NOT NULL UNIQUE,
+    password TEXT NOT NULL,
+    create_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    update_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  );
+
+CREATE TABLE
+  Categories (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    user_id INT REFERENCES Users (id) ON DELETE CASCADE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  );
+
+CREATE TABLE
+  Transactions (
+    id SERIAL PRIMARY KEY,
+    user_id INT REFERENCES Users (id) ON DELETE CASCADE,
+    amount DECIMAL(10, 2) NOT NULL,
+    category_id INT REFERENCES Categories (id) ON DELETE SET NULL,
+    DATE DATE NOT NULL,
+    type TEXT CHECK (type IN ('income', 'exprense')) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  );
+
+CREATE TABLE
+  Budgets (
+    id SERIAL PRIMARY KEY,
+    user_id INT REFERENCES Users (id) ON DELETE CASCADE,
+    category_id INT REFERENCES Categories (id) ON DELETE CASCADE,
+    category_limit INT NOT NULL,
+    month INT NOT NULL,
+    year INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  );
+
+CREATE TABLE
+  Reports (
+    id SERIAL PRIMARY KEY,
+    user_id INT REFERENCES Users (id) ON DELETE CASCADE,
+    total_income REAL NOT NULL,
+    total_expense REAL NOT NULL,
+    net_balance REAL NOT NULL,
+    month INT NOT NULL,
+    year INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  );
